@@ -1,41 +1,1728 @@
-from pathlib import Path
-import re
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  
+  <meta name="color-scheme" content="light" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="format-detection" content="telephone=yes" />
+  <title>Korantemaa Ofei-Agyekum Portfolio</title>
+  <meta name="description" content="Bilingual finance portfolio for Korantemaa Ofei-Agyekum, Treasurer / Market Operations Controller." />
+  <style>
+    :root {
+      --bg:#F7FBFD;
+      --card:#FFFFFF;
+      --soft:#EAF7FB;
+      --bg-soft:#EAF7FB;
+      --panel:rgba(255,255,255,.90);
+      --panel-strong:#FFFFFF;
+      --ink:#050A14;
+      --text:#050A14;
+      --muted:#3F4A56;
+      --muted-2:#64717E;
+      --line:#D5E8EF;
+      --accent:#0891B2;
+      --accent-dark:#05677F;
+      --accent-soft:rgba(8,145,178,.11);
+      --shadow:0 22px 70px rgba(5,10,20,.10);
+      --shadow-soft:0 12px 34px rgba(5,10,20,.07);
+      --radius:26px;
+      --radius-sm:18px;
+      --max:1180px;
+    }
 
-src = Path("/mnt/data/Pasted text(5).txt")
-html = src.read_text(encoding="utf-8", errors="ignore")
+    * { box-sizing:border-box; margin:0; padding:0; }
 
-# 1) Remove old floating resume download buttons, if present.
-html = re.sub(
-    r'\n\s*<div class="resume-downloads" aria-label="Resume downloads">[\s\S]*?</div>\s*(?=</body>)',
-    "\n",
-    html,
-    count=1
-)
+    html { scroll-behavior:smooth; }
 
-# 2) Add dropdown HTML in the navigation, before the LinkedIn Connect button.
-download_dropdown_html = """        <div class="download-dropdown">
-          <button type="button" class="nav-link download-toggle" aria-haspopup="true" aria-expanded="false">
-            <span data-i18n="nav.download">Télécharger</span>
-            <span class="download-arrow" aria-hidden="true">▾</span>
-          </button>
+    body {
+      min-height:100vh;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(200,117,47,.17), transparent 31%),
+        radial-gradient(circle at 100% 4%, rgba(185,130,58,.14), transparent 28%),
+        radial-gradient(circle at 70% 100%, rgba(255,248,241,.76), transparent 36%),
+        linear-gradient(135deg, #F6E8DA 0%, #FFF8F1 46%, #F3E2D2 100%);
+      overflow-x:hidden;
+    }
 
-          <div class="download-menu" role="menu" aria-label="CV downloads">
-            <a href="Korantemaa_Ofei-Agyekum_CV_EN.pdf" download role="menuitem">
-              <span data-i18n="download.en">CV anglais</span>
-            </a>
-            <a href="Korantemaa_Ofei-Agyekum_CV_FR.pdf" download role="menuitem">
-              <span data-i18n="download.fr">CV français</span>
-            </a>
-          </div>
-        </div>
-"""
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      background-image:
+        linear-gradient(rgba(142,75,31,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(142,75,31,.045) 1px, transparent 1px);
+      background-size:32px 32px;
+      mask-image:radial-gradient(circle at center, black 45%, transparent 86%);
+      opacity:.48;
+    }
 
-connect_anchor = '''        <a class="nav-link cta" href="https://www.linkedin.com/in/korantemaa-ofei-agyekum/" target="_blank" rel="noopener" data-i18n="nav.cta">Connect</a>'''
-if 'class="download-dropdown"' not in html and connect_anchor in html:
-    html = html.replace(connect_anchor, download_dropdown_html + connect_anchor, 1)
+    a { color:inherit; text-decoration:none; }
+    button { font:inherit; }
 
-# 3) Add CSS for dropdown, before </style>.
-dropdown_css = """
+    .shell {
+      position:relative;
+      z-index:1;
+      max-width:var(--max);
+      margin:0 auto;
+      padding:24px 18px 38px;
+    }
+
+    .nav-wrap {
+      display:flex;
+      justify-content:center;
+      margin-bottom:28px;
+      position:sticky;
+      top:14px;
+      z-index:50;
+    }
+
+    .nav {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:8px;
+      padding:8px;
+      border-radius:999px;
+      background:rgba(255,248,241,.80);
+      border:1px solid rgba(232,210,190,.95);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
+    }
+
+    .nav-btn,
+    .nav-link {
+      border:0;
+      background:transparent;
+      cursor:pointer;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:750;
+      color:var(--muted);
+      transition:.22s ease;
+      white-space:nowrap;
+    }
+
+    .nav-btn:hover,
+    .nav-link:hover {
+      background:var(--accent-soft);
+      color:var(--accent-dark);
+    }
+
+    .nav-btn.active {
+      background:linear-gradient(135deg, var(--accent-dark), var(--accent));
+      color:white;
+      box-shadow:0 10px 24px rgba(142,75,31,.22);
+    }
+
+    .nav-link.cta {
+      background:linear-gradient(135deg, #1F2933, #3B3028);
+      color:white;
+    }
+
+    .lang-switch {
+      display:flex;
+      align-items:center;
+      gap:4px;
+      padding:4px;
+      border:1px solid rgba(232,210,190,.95);
+      border-radius:999px;
+      background:rgba(255,255,255,.58);
+    }
+
+    .lang-btn {
+      border:0;
+      cursor:pointer;
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:12px;
+      font-weight:850;
+      color:var(--muted);
+      background:transparent;
+      transition:.18s ease;
+    }
+
+    .lang-btn.active {
+      color:white;
+      background:linear-gradient(135deg, var(--accent-dark), var(--accent));
+      box-shadow:0 8px 18px rgba(142,75,31,.18);
+    }
+
+    .page { display:none; }
+    .page.active {
+      display:block;
+      animation:fade .22s ease;
+    }
+
+    @keyframes fade {
+      from { opacity:0; transform:translateY(8px); }
+      to { opacity:1; transform:none; }
+    }
+
+    .hero {
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:26px;
+      align-items:stretch;
+    }
+
+    .hero-card,
+    .card,
+    .panel,
+    .stat,
+    .mini-role,
+    .contact-item {
+      background:var(--panel);
+      border:1px solid rgba(232,210,190,.78);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      
+      min-width:0;
+    }
+
+    .hero-card { padding:30px; }
+    .identity-row {
+      display:flex;
+      gap:20px;
+      align-items:flex-start;
+      margin-bottom:22px;
+    }
+
+    .avatar {
+      width:112px;
+      height:112px;
+      border-radius:30px;
+      overflow:hidden;
+      flex:0 0 auto;
+      background:#fff;
+      border:1px solid rgba(232,210,190,.9);
+      box-shadow:var(--shadow-soft);
+    }
+
+    .avatar img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .eyebrow {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:var(--accent-soft);
+      color:var(--accent-dark);
+      font-size:12px;
+      font-weight:850;
+      border:1px solid rgba(200,117,47,.18);
+      margin-bottom:14px;
+    }
+
+    .eyebrow::before {
+      content:"";
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--accent-dark), var(--accent));
+    }
+
+    h1 {
+      font-size:clamp(2.25rem, 4.7vw, 4.1rem);
+      line-height:.94;
+      letter-spacing:-.055em;
+      margin-bottom:12px;
+    }
+
+    .grad {
+      background:linear-gradient(135deg, #1F2933 0%, #8E4B1F 58%, #C8752F 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .role {
+      color:var(--muted);
+      font-size:1.08rem;
+      font-weight:650;
+      line-height:1.55;
+      max-width:760px;
+      margin-bottom:16px;
+    }
+
+    .summary {
+      color:var(--muted);
+      line-height:1.82;
+      font-size:1rem;
+      max-width:780px;
+    }
+
+    .cta-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:22px;
+    }
+
+    .btn {
+      border:0;
+      cursor:pointer;
+      border-radius:14px;
+      padding:12px 16px;
+      font-weight:800;
+      font-size:14px;
+      transition:.22s ease;
+    }
+
+    .btn.primary {
+      color:white;
+      background:linear-gradient(135deg, var(--accent-dark), var(--accent));
+      box-shadow:0 12px 28px rgba(142,75,31,.20);
+    }
+
+    .btn.secondary {
+      color:var(--ink);
+      background:white;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-soft);
+    }
+
+    .btn:hover { transform:translateY(-1px); }
+
+    .hero-right {
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:14px;
+    }
+
+    .stat {
+      padding:22px 18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      min-height:136px;
+      background:var(--panel-strong);
+    }
+
+    .stat-num {
+      font-size:2rem;
+      font-weight:900;
+      line-height:1;
+      letter-spacing:-.06em;
+      color:var(--accent);
+      margin-bottom:8px;
+    }
+
+    .stat-label {
+      color:var(--ink);
+      font-weight:850;
+      margin-bottom:4px;
+    }
+
+    .stat-desc {
+      color:var(--muted-2);
+      font-size:.8rem;
+      line-height:1.45;
+    }
+
+    .trust {
+      border-top:1px solid rgba(232,210,190,.72);
+      margin-top:22px;
+      padding-top:18px;
+    }
+
+    .trust-label {
+      color:var(--muted-2);
+      font-size:11px;
+      font-weight:850;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      margin-bottom:12px;
+    }
+
+    .trust-row,
+    .tags {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .tag,
+    .trust-chip {
+      display:inline-flex;
+      padding:8px 10px;
+      border-radius:999px;
+      background:var(--accent-soft);
+      color:var(--accent-dark);
+      border:1px solid rgba(200,117,47,.18);
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .panel { padding:28px; }
+
+    .section-title {
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:16px;
+      margin-bottom:20px;
+    }
+
+    .section-title h2 {
+      font-size:clamp(1.95rem, 4vw, 3.1rem);
+      line-height:.96;
+      letter-spacing:-.055em;
+    }
+
+    .section-title p {
+      color:var(--muted);
+      line-height:1.7;
+      max-width:690px;
+    }
+
+    .grid-2 {
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:18px;
+    }
+
+    .grid-3 {
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:16px;
+    }
+
+    .card {
+      padding:20px;
+      box-shadow:var(--shadow-soft);
+      background:rgba(255,255,255,.72);
+    }
+
+    .card h3 {
+      color:var(--ink);
+      font-size:1.06rem;
+      letter-spacing:-.02em;
+      margin-bottom:10px;
+    }
+
+    .card p,
+    .card li {
+      color:var(--muted);
+      line-height:1.75;
+      font-size:.95rem;
+    }
+
+    .card ul,
+    .featured-role ul {
+      padding-left:18px;
+    }
+
+    li + li { margin-top:6px; }
+
+    .experience-grid {
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:18px;
+    }
+
+    .featured-role {
+      padding:24px;
+      border-radius:28px;
+      color:white;
+      background:linear-gradient(160deg, #1F2933 0%, #2B3440 58%, #3B3028 100%);
+      box-shadow:0 18px 40px rgba(61,39,21,.18);
+    }
+
+    .featured-role .date {
+      color:#C9F0F7;
+      font-size:12px;
+      font-weight:850;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:9px;
+    }
+
+    .featured-role h3 {
+      font-size:1.65rem;
+      line-height:1.1;
+      letter-spacing:-.045em;
+      margin-bottom:6px;
+    }
+
+    .featured-role .company {
+      color:rgba(255,248,241,.82);
+      font-weight:800;
+      margin-bottom:14px;
+    }
+
+    .featured-role li {
+      color:rgba(255,248,241,.90);
+      line-height:1.72;
+      font-size:.95rem;
+    }
+
+    .mini-stack {
+      display:grid;
+      gap:12px;
+    }
+
+    .mini-role {
+      padding:18px;
+      background:rgba(255,255,255,.74);
+      box-shadow:var(--shadow-soft);
+    }
+
+    .mini-role .date {
+      color:var(--accent-dark);
+      font-size:11px;
+      font-weight:850;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:6px;
+    }
+
+    .mini-role h3 {
+      font-size:1rem;
+      line-height:1.25;
+      margin-bottom:4px;
+    }
+
+    .mini-role .company {
+      color:var(--muted-2);
+      font-weight:800;
+      font-size:.9rem;
+      margin-bottom:8px;
+    }
+
+    .mini-role p {
+      color:var(--muted);
+      line-height:1.65;
+      font-size:.92rem;
+    }
+
+    .contact-grid {
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:16px;
+    }
+
+    .contact-item {
+      padding:18px;
+      background:rgba(255,255,255,.76);
+      box-shadow:var(--shadow-soft);
+    }
+
+    .contact-label {
+      color:var(--accent-dark);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:11px;
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    .contact-value {
+      color:var(--ink);
+      font-weight:800;
+      line-height:1.5;
+      word-break:break-word;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .grid-2,
+      .grid-3,
+      .experience-grid,
+      .contact-grid {
+        grid-template-columns:1fr;
+      }
+      .hero-right {
+        grid-template-columns:repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .shell { padding:14px 12px 28px; }
+      .nav-wrap { top:8px; }
+      .nav {
+        width:100%;
+        justify-content:flex-start;
+        flex-wrap:nowrap;
+        overflow:auto;
+        border-radius:22px;
+      }
+      .identity-row {
+        flex-direction:column;
+      }
+      .hero-card,
+      .panel {
+        padding:20px;
+      }
+      .hero-right {
+        grid-template-columns:1fr;
+      }
+      .section-title {
+        align-items:flex-start;
+      }
+    }
+  
+    .backup-box {
+      margin-top:18px;
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,248,241,.10);
+      border:1px solid rgba(255,248,241,.22);
+    }
+
+    .backup-label {
+      color:#C9F0F7;
+      font-size:11px;
+      font-weight:850;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+
+    .backup-box h4 {
+      font-size:1rem;
+      margin-bottom:8px;
+      color:#FFF8F1;
+    }
+
+    .mini-role ul {
+      padding-left:18px;
+    }
+
+    .mini-role li {
+      color:var(--muted);
+      line-height:1.65;
+      font-size:.91rem;
+    }
+
+  
+/* === Exact beige / cream palette from reference portfolio === */
+body {
+  color:var(--ink) !important;
+  background:
+    radial-gradient(circle at 12% 6%, rgba(8,145,178,.17), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(8,145,178,.35), transparent 28%),
+    var(--bg) !important;
+}
+
+body::before {
+  background-image:
+    linear-gradient(rgba(8,145,178,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8,145,178,.035) 1px, transparent 1px) !important;
+  background-size:32px 32px !important;
+  opacity:.34 !important;
+}
+
+.nav-wrap {
+  margin-bottom:28px !important;
+}
+
+.nav {
+  background:rgba(255,255,255,.86) !important;
+  border:1px solid var(--line) !important;
+  box-shadow:var(--shadow) !important;
+}
+
+.nav-btn,
+.nav-link {
+  color:#111827 !important;
+  background:transparent !important;
+}
+
+.nav-btn:hover,
+.nav-link:hover,
+.nav-btn.active {
+  background:var(--soft) !important;
+  color:var(--accent-dark) !important;
+  box-shadow:none !important;
+}
+
+.nav-link.cta {
+  background:linear-gradient(135deg,#050A14,var(--accent)) !important;
+  color:#fff !important;
+}
+
+.lang-switch {
+  background:rgba(255,255,255,.78) !important;
+  border:1px solid var(--line) !important;
+}
+
+.lang-btn {
+  color:var(--muted) !important;
+}
+
+.lang-btn.active {
+  background:var(--soft) !important;
+  color:var(--accent-dark) !important;
+  box-shadow:none !important;
+}
+
+.hero-card,
+.panel,
+.card,
+.stat,
+.mini-role,
+.contact-item {
+  background:rgba(255,255,255,.84) !important;
+  border:1px solid var(--line) !important;
+  box-shadow:var(--shadow) !important;
+}
+
+.hero-card,
+.panel {
+  border-radius:30px !important;
+}
+
+.card,
+.stat,
+.mini-role,
+.contact-item {
+  border-radius:22px !important;
+}
+
+.featured-role,
+.contact-hero,
+.nav-link.cta {
+  background:linear-gradient(135deg,#050A14,var(--accent)) !important;
+  color:#fff !important;
+}
+
+.featured-role .date,
+.featured-role .company,
+.featured-role li,
+.backup-label,
+.backup-box h4 {
+  color:rgba(255,255,255,.88) !important;
+}
+
+.backup-box {
+  background:rgba(255,255,255,.10) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+}
+
+.eyebrow,
+.card h3,
+.card h4,
+.contact-label,
+.mini-role .date,
+.stat-num {
+  color:var(--accent-dark) !important;
+}
+
+.eyebrow::before {
+  background:var(--accent) !important;
+}
+
+.grad,
+h2 span {
+  background:none !important;
+  -webkit-background-clip:initial !important;
+  background-clip:initial !important;
+  color:var(--accent) !important;
+}
+
+h1,
+h2,
+.section-title h2,
+.featured-role h3,
+.mini-role h3,
+.stat-label,
+.contact-value {
+  color:var(--ink) !important;
+}
+
+.featured-role h3,
+.featured-role .company,
+.featured-role li,
+.featured-role .date {
+  color:#fff !important;
+}
+
+.role,
+.summary,
+.section-title p,
+.card p,
+.card li,
+.mini-role p,
+.mini-role li,
+.stat-desc {
+  color:#1F2937 !important;
+}
+
+.tag,
+.trust-chip,
+.pill,
+.btn.secondary {
+  background:var(--soft) !important;
+  color:var(--accent-dark) !important;
+  border:1px solid #BFE2EB !important;
+}
+
+.featured-role .tag,
+.featured-role .trust-chip {
+  background:rgba(255,255,255,.10) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  color:#fff !important;
+}
+
+.btn.primary {
+  background:linear-gradient(135deg,#050A14,var(--accent)) !important;
+  color:#fff !important;
+  box-shadow:var(--shadow) !important;
+}
+
+.avatar,
+.photo {
+  border-color:var(--line) !important;
+  box-shadow:var(--shadow) !important;
+}
+
+/* Readability and spacing matching the reference layout */
+.shell {
+  padding:22px clamp(22px,3.4vw,44px) 42px !important;
+}
+
+.hero,
+.experience-grid,
+.grid-2,
+.grid-3,
+.contact-grid {
+  gap:18px !important;
+}
+
+.hero-card,
+.panel {
+  padding:clamp(22px,2.5vw,32px) !important;
+}
+
+.card,
+.stat,
+.mini-role,
+.contact-item {
+  padding:18px !important;
+}
+
+.summary,
+.section-title p,
+.card p,
+.card li,
+.mini-role p,
+.mini-role li,
+.featured-role li {
+  line-height:1.62 !important;
+}
+
+.mini-stack {
+  gap:12px !important;
+}
+
+.tags,
+.trust-row,
+.cta-row {
+  gap:10px !important;
+}
+
+  
+/* === FINAL visual correction from the reference image ===
+   Background: beige/cream
+   Main names and titles: black
+   Accent only: copper/orange headings, active nav text, key words, chips
+*/
+:root {
+  --bg:#F7FBFD;
+  --card:#ffffff;
+  --soft:#EAF7FB;
+  --bg-soft:#EAF7FB;
+  --panel:rgba(255,255,255,.84);
+  --panel-strong:#ffffff;
+  --ink:#050A14;
+  --text:#050A14;
+  --muted:#3F4A56;
+  --muted-2:#64717E;
+  --line:#D5E8EF;
+  --accent:#0891B2;
+  --accent-dark:#05677F;
+  --accent-soft:rgba(8,145,178,.11);
+  --shadow:0 22px 70px rgba(5,10,20,.10);
+  --shadow-soft:0 12px 34px rgba(5,10,20,.08);
+  --radius:26px;
+  --radius-sm:18px;
+  --max:1180px;
+}
+
+body {
+  color:var(--ink) !important;
+  background:
+    radial-gradient(circle at 12% 6%, rgba(8,145,178,.17), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(8,145,178,.35), transparent 28%),
+    var(--bg) !important;
+}
+
+body::before {
+  background-image:
+    linear-gradient(rgba(8,145,178,.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8,145,178,.032) 1px, transparent 1px) !important;
+  background-size:32px 32px !important;
+  opacity:.30 !important;
+}
+
+/* Main identity and big text stay black, like the image */
+h1,
+h1 .grad,
+.section-title h2,
+.section-title h2 .grad,
+h2,
+.stat-num,
+.stat strong,
+.stat-label,
+.contact-value,
+.mini-role h3,
+.card h3,
+.card h4 {
+  color:var(--ink) !important;
+  background:none !important;
+  -webkit-background-clip:initial !important;
+  background-clip:initial !important;
+  -webkit-text-fill-color:var(--ink) !important;
+}
+
+/* Accent only where the reference image uses orange/copper */
+h2 span,
+.accent,
+.eyebrow,
+.contact-label,
+.mini-role .date,
+.featured-role .date,
+.card h3,
+.card h4 {
+  color:var(--accent-dark) !important;
+}
+
+.eyebrow::before {
+  background:var(--accent) !important;
+}
+
+.nav {
+  background:rgba(255,255,255,.86) !important;
+  border:1px solid var(--line) !important;
+  box-shadow:var(--shadow) !important;
+}
+
+.nav-btn,
+.nav-link {
+  color:#111827 !important;
+  background:transparent !important;
+}
+
+.nav-btn:hover,
+.nav-link:hover,
+.nav-btn.active,
+.lang-btn.active {
+  background:var(--soft) !important;
+  color:var(--accent-dark) !important;
+  box-shadow:none !important;
+}
+
+.nav-link.cta,
+.btn.primary {
+  background:linear-gradient(135deg,#050A14,var(--accent)) !important;
+  color:#fff !important;
+  box-shadow:var(--shadow) !important;
+}
+
+.lang-switch {
+  background:rgba(255,255,255,.78) !important;
+  border:1px solid var(--line) !important;
+}
+
+.lang-btn {
+  color:var(--muted) !important;
+}
+
+.hero-card,
+.panel,
+.card,
+.stat,
+.mini-role,
+.contact-item {
+  background:rgba(255,255,255,.84) !important;
+  border:1px solid var(--line) !important;
+  box-shadow:var(--shadow-soft) !important;
+}
+
+.hero-card,
+.panel {
+  border-radius:30px !important;
+}
+
+.card,
+.stat,
+.mini-role,
+.contact-item {
+  border-radius:22px !important;
+}
+
+/* Dark feature blocks keep white text */
+.featured-role,
+.contact-hero {
+  background:linear-gradient(135deg,#050A14,var(--accent)) !important;
+  color:#fff !important;
+}
+
+.featured-role h3,
+.featured-role .company,
+.featured-role li,
+.featured-role .date,
+.backup-label,
+.backup-box h4,
+.backup-box li {
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+
+.backup-box {
+  background:rgba(255,255,255,.10) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+}
+
+.role,
+.summary,
+.section-title p,
+.card p,
+.card li,
+.mini-role p,
+.mini-role li,
+.stat-desc,
+.contact-value {
+  color:#1F2937 !important;
+}
+
+.identity p,
+.company {
+  color:var(--muted) !important;
+}
+
+.tag,
+.trust-chip,
+.pill,
+.btn.secondary {
+  background:var(--soft) !important;
+  color:var(--accent-dark) !important;
+  border:1px solid #BFE2EB !important;
+}
+
+.featured-role .tag,
+.featured-role .trust-chip {
+  background:rgba(255,255,255,.10) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+
+/* Keep the page breathable and readable */
+.shell {
+  padding:24px clamp(22px,3.4vw,44px) 42px !important;
+}
+
+.nav-wrap {
+  margin-bottom:28px !important;
+}
+
+.hero,
+.experience-grid,
+.grid-2,
+.grid-3,
+.contact-grid {
+  gap:20px !important;
+}
+
+.hero-card,
+.panel {
+  padding:clamp(22px,2.6vw,32px) !important;
+}
+
+.card,
+.stat,
+.mini-role,
+.contact-item {
+  padding:18px !important;
+}
+
+.summary,
+.section-title p,
+.card p,
+.card li,
+.mini-role p,
+.mini-role li,
+.featured-role li {
+  line-height:1.64 !important;
+}
+
+.mini-stack {
+  gap:14px !important;
+}
+
+
+/* === FINAL BLUE / BLACK THEME
+   Blue sampled from the reference image: #0891B2.
+   Main text stays black. Blue is used for accents, active states, section labels and highlighted words.
+*/
+:root {
+  --bg:#F7FBFD;
+  --card:#FFFFFF;
+  --soft:#EAF7FB;
+  --bg-soft:#EAF7FB;
+  --panel:rgba(255,255,255,.90);
+  --panel-strong:#FFFFFF;
+  --ink:#050A14;
+  --text:#050A14;
+  --muted:#3F4A56;
+  --muted-2:#64717E;
+  --line:#D5E8EF;
+  --accent:#0891B2;
+  --accent-dark:#05677F;
+  --accent-soft:rgba(8,145,178,.11);
+  --shadow:0 22px 70px rgba(5,10,20,.10);
+  --shadow-soft:0 12px 34px rgba(5,10,20,.07);
+  --radius:26px;
+  --radius-sm:18px;
+  --max:1180px;
+}
+
+body {
+  color:var(--ink) !important;
+  background:
+    radial-gradient(circle at 12% 6%, rgba(8,145,178,.15), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(8,145,178,.10), transparent 28%),
+    linear-gradient(135deg, #F7FBFD 0%, #FFFFFF 48%, #EAF7FB 100%) !important;
+}
+
+body::before {
+  background-image:
+    linear-gradient(rgba(8,145,178,.040) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8,145,178,.040) 1px, transparent 1px) !important;
+  background-size:32px 32px !important;
+  opacity:.34 !important;
+}
+
+/* Main text and names: black */
+h1,
+h1 .grad,
+.section-title h2,
+.section-title h2 .grad,
+h2,
+.stat-label,
+.contact-value,
+.mini-role h3,
+.card h3,
+.card h4,
+.company {
+  color:var(--ink) !important;
+  background:none !important;
+  -webkit-background-clip:initial !important;
+  background-clip:initial !important;
+  -webkit-text-fill-color:var(--ink) !important;
+}
+
+/* Blue accents */
+h2 span,
+.eyebrow,
+.contact-label,
+.mini-role .date,
+.card h3,
+.card h4,
+.stat-num,
+.stat strong {
+  color:var(--accent) !important;
+  -webkit-text-fill-color:var(--accent) !important;
+}
+
+.eyebrow::before {
+  background:var(--accent) !important;
+}
+
+.nav {
+  background:rgba(255,255,255,.88) !important;
+  border:1px solid var(--line) !important;
+  box-shadow:var(--shadow) !important;
+}
+
+.nav-btn,
+.nav-link,
+.lang-btn {
+  color:#111827 !important;
+  background:transparent !important;
+}
+
+.nav-btn:hover,
+.nav-link:hover,
+.nav-btn.active,
+.lang-btn.active {
+  background:var(--soft) !important;
+  color:var(--accent-dark) !important;
+  box-shadow:none !important;
+}
+
+.nav-link.cta,
+.btn.primary {
+  background:linear-gradient(135deg,#050A14,var(--accent)) !important;
+  color:#fff !important;
+  box-shadow:var(--shadow) !important;
+}
+
+.lang-switch {
+  background:rgba(255,255,255,.82) !important;
+  border:1px solid var(--line) !important;
+}
+
+.hero-card,
+.panel,
+.card,
+.stat,
+.mini-role,
+.contact-item {
+  background:rgba(255,255,255,.90) !important;
+  border:1px solid var(--line) !important;
+  box-shadow:var(--shadow-soft) !important;
+}
+
+.hero-card,
+.panel {
+  border-radius:30px !important;
+}
+
+.card,
+.stat,
+.mini-role,
+.contact-item {
+  border-radius:22px !important;
+}
+
+/* Feature block: black with blue depth, white text for readability */
+.featured-role,
+.contact-hero {
+  background:linear-gradient(135deg,#050A14 0%, #0B1724 58%, #0891B2 100%) !important;
+  color:#fff !important;
+}
+
+.featured-role h3,
+.featured-role .company,
+.featured-role li,
+.featured-role .date,
+.backup-label,
+.backup-box h4,
+.backup-box li {
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+
+.backup-box {
+  background:rgba(255,255,255,.10) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+}
+
+.role,
+.summary,
+.section-title p,
+.card p,
+.card li,
+.mini-role p,
+.mini-role li,
+.stat-desc,
+.contact-value,
+.identity p {
+  color:#1F2937 !important;
+}
+
+.tag,
+.trust-chip,
+.pill,
+.btn.secondary {
+  background:var(--soft) !important;
+  color:var(--accent-dark) !important;
+  border:1px solid #BFE2EB !important;
+}
+
+.featured-role .tag,
+.featured-role .trust-chip {
+  background:rgba(255,255,255,.12) !important;
+  border:1px solid rgba(255,255,255,.20) !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+
+.avatar,
+.photo {
+  border-color:var(--line) !important;
+  box-shadow:var(--shadow-soft) !important;
+}
+
+/* Keep readability and spacing */
+.shell {
+  padding:24px clamp(22px,3.4vw,44px) 42px !important;
+}
+
+.nav-wrap {
+  margin-bottom:28px !important;
+}
+
+.hero,
+.experience-grid,
+.grid-2,
+.grid-3,
+.contact-grid {
+  gap:20px !important;
+}
+
+.hero-card,
+.panel {
+  padding:clamp(22px,2.6vw,32px) !important;
+}
+
+.card,
+.stat,
+.mini-role,
+.contact-item {
+  padding:18px !important;
+}
+
+.summary,
+.section-title p,
+.card p,
+.card li,
+.mini-role p,
+.mini-role li,
+.featured-role li {
+  line-height:1.64 !important;
+}
+
+.mini-stack {
+  gap:14px !important;
+}
+
+
+/* === Navigation, Connect CTA and Experience alignment fixes === */
+.nav-btn.active {
+  background:var(--accent) !important;
+  color:#ffffff !important;
+  box-shadow:0 10px 24px rgba(8,145,178,.22) !important;
+}
+
+.nav-btn:hover:not(.active),
+.nav-link:hover,
+.lang-btn:hover:not(.active) {
+  background:var(--soft) !important;
+  color:var(--accent-dark) !important;
+}
+
+.nav-link.cta {
+  background:linear-gradient(135deg,#050A14,var(--accent)) !important;
+  color:#ffffff !important;
+  border:1px solid rgba(8,145,178,.25) !important;
+}
+
+.lang-btn.active {
+  background:var(--accent) !important;
+  color:#ffffff !important;
+  box-shadow:0 8px 18px rgba(8,145,178,.18) !important;
+}
+
+.linkedin-action {
+  margin-top:22px;
+  display:flex;
+  justify-content:flex-start;
+}
+
+.linkedin-button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:12px 18px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#050A14,var(--accent));
+  color:#ffffff !important;
+  font-weight:850;
+  font-size:14px;
+  box-shadow:var(--shadow-soft);
+  border:1px solid rgba(8,145,178,.22);
+  transition:.22s ease;
+}
+
+.linkedin-button:hover {
+  transform:translateY(-1px);
+  box-shadow:var(--shadow);
+}
+
+#page-experience .panel {
+  padding:clamp(24px,3vw,36px) !important;
+}
+
+#page-experience .experience-grid {
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:22px !important;
+  align-items:start !important;
+}
+
+#page-experience .featured-role {
+  width:100%;
+  max-width:none;
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);
+  gap:22px;
+  align-items:start;
+  padding:26px !important;
+}
+
+#page-experience .featured-role > ul {
+  margin-top:0;
+}
+
+#page-experience .featured-role .backup-box {
+  margin-top:0 !important;
+  align-self:start;
+}
+
+#page-experience .featured-role .tags {
+  grid-column:1 / -1;
+  margin-top:2px;
+}
+
+#page-experience .mini-stack {
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:18px !important;
+  align-items:stretch !important;
+}
+
+#page-experience .mini-role {
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:20px !important;
+}
+
+#page-experience .mini-role ul {
+  margin-top:4px;
+}
+
+#page-experience .mini-role li {
+  line-height:1.62 !important;
+}
+
+@media (max-width: 980px) {
+  #page-experience .featured-role {
+    display:block;
+  }
+
+  #page-experience .featured-role .backup-box {
+    margin-top:20px !important;
+  }
+
+  #page-experience .mini-stack {
+    grid-template-columns:1fr !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .nav {
+    gap:7px !important;
+  }
+
+  .nav-btn,
+  .nav-link {
+    padding:10px 13px !important;
+  }
+
+  #page-experience .panel {
+    padding:20px !important;
+  }
+}
+
+
+/* === Image fitting and Experience section final alignment === */
+.avatar {
+  width:118px !important;
+  height:118px !important;
+  border-radius:30px !important;
+  background:#ffffff !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  overflow:hidden !important;
+  padding:0 !important;
+}
+
+.avatar img {
+  width:100% !important;
+  height:100% !important;
+  object-fit:contain !important;
+  object-position:center top !important;
+  background:#ffffff !important;
+  display:block !important;
+}
+
+#page-experience .section-title {
+  align-items:flex-start !important;
+  margin-bottom:24px !important;
+}
+
+#page-experience .section-title h2 {
+  max-width:900px !important;
+}
+
+#page-experience .section-title p {
+  max-width:720px !important;
+}
+
+#page-experience .experience-grid-fixed {
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:24px !important;
+  align-items:start !important;
+}
+
+#page-experience .danone-card {
+  display:block !important;
+  padding:28px !important;
+  border-radius:28px !important;
+  background:linear-gradient(135deg,#050A14 0%, #0B1724 58%, #0891B2 100%) !important;
+}
+
+#page-experience .danone-header {
+  display:grid;
+  grid-template-columns:minmax(180px,.55fr) minmax(360px,1.45fr);
+  gap:28px;
+  align-items:start;
+  margin-bottom:22px;
+}
+
+#page-experience .danone-header h3 {
+  margin:0 !important;
+  max-width:620px;
+  font-size:clamp(1.65rem, 2.4vw, 2.25rem) !important;
+  line-height:1.08 !important;
+  letter-spacing:-.045em !important;
+}
+
+#page-experience .danone-header .date,
+#page-experience .danone-header .company {
+  display:block;
+  margin:0 0 14px 0 !important;
+}
+
+#page-experience .danone-content {
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);
+  gap:24px;
+  align-items:start;
+}
+
+#page-experience .danone-main ul,
+#page-experience .backup-box ul,
+#page-experience .mini-role ul {
+  padding-left:18px !important;
+  margin:0 !important;
+}
+
+#page-experience .danone-main li,
+#page-experience .backup-box li {
+  line-height:1.7 !important;
+  margin-top:0 !important;
+  margin-bottom:10px !important;
+}
+
+#page-experience .backup-box {
+  margin:0 !important;
+  padding:20px !important;
+  border-radius:20px !important;
+  background:rgba(255,255,255,.10) !important;
+  border:1px solid rgba(255,255,255,.20) !important;
+}
+
+#page-experience .backup-box h4 {
+  margin:0 0 12px 0 !important;
+}
+
+#page-experience .danone-card .tags {
+  margin-top:24px !important;
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:10px !important;
+}
+
+#page-experience .experience-history {
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:18px !important;
+  align-items:stretch !important;
+}
+
+#page-experience .experience-history .mini-role {
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  padding:22px !important;
+  border-radius:24px !important;
+}
+
+#page-experience .mini-role .date {
+  margin-bottom:8px !important;
+}
+
+#page-experience .mini-role h3 {
+  margin-bottom:6px !important;
+}
+
+#page-experience .mini-role .company {
+  margin-bottom:12px !important;
+}
+
+#page-experience .mini-role li {
+  line-height:1.62 !important;
+  margin-bottom:7px !important;
+}
+
+@media (min-width: 1280px) {
+  #page-experience .panel {
+    max-width:1180px;
+    margin:0 auto;
+  }
+}
+
+@media (max-width: 980px) {
+  #page-experience .danone-header,
+  #page-experience .danone-content,
+  #page-experience .experience-history {
+    grid-template-columns:1fr !important;
+  }
+
+  #page-experience .danone-header {
+    gap:10px !important;
+  }
+
+  #page-experience .backup-box {
+    margin-top:6px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .avatar {
+    width:96px !important;
+    height:96px !important;
+  }
+
+  #page-experience .danone-card {
+    padding:22px !important;
+  }
+
+  #page-experience .experience-history .mini-role {
+    padding:18px !important;
+  }
+}
+
+
+/* === Universal device/iOS compatibility layer === */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button, label, a {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  touch-action: manipulation;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+.page, .shell {
+  width: min(1180px, calc(100% - 24px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.panel {
+  overflow: visible !important;
+}
+@supports (-webkit-touch-callout: none) {
+  .nav-wrap, .top-panel {
+    position: sticky !important;
+    top: env(safe-area-inset-top, 8px) !important;
+  }
+}
+@media (max-width: 760px) {
+  h1, h2 {
+    word-break: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+}
+
+
+/* === Resume download buttons included for GitHub deployment === */
+.resume-downloads {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 9999;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.resume-downloads a {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: #ffffff !important;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none !important;
+  background: linear-gradient(135deg, var(--accent-dark, var(--blue-dark, #0b3557)), var(--accent, var(--blue, #0969b7)));
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+  border: 1px solid rgba(255,255,255,.30);
+}
+
+.resume-downloads a:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .resume-downloads {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .resume-downloads a {
+    flex: 1 1 auto;
+  }
+}
+
+
 /* === CV download dropdown menu === */
 .download-dropdown {
   position: relative;
@@ -123,22 +1810,481 @@ dropdown_css = """
     justify-content: center;
   }
 }
-"""
 
-if "CV download dropdown menu" not in html:
-    html = html.replace("</style>", dropdown_css + "\n</style>", 1)
+</style>
+</head>
+<body>
+  <div class="shell">
+    <div class="nav-wrap">
+      <nav class="nav" aria-label="Navigation">
+        <button type="button" class="nav-btn active" data-page="home" data-i18n="nav.home">Accueil</button>
+        <button type="button" class="nav-btn" data-page="profile" data-i18n="nav.profile">Profil</button>
+        <button type="button" class="nav-btn" data-page="experience" data-i18n="nav.experience">Expérience</button>
+        <button type="button" class="nav-btn" data-page="expertise" data-i18n="nav.expertise">Expertise</button>
+        <button type="button" class="nav-btn" data-page="contact" data-i18n="nav.contact">Contact</button>
+        <div class="download-dropdown">
+          <button type="button" class="nav-link download-toggle" aria-haspopup="true" aria-expanded="false">
+            <span data-i18n="nav.download">Télécharger</span>
+            <span class="download-arrow" aria-hidden="true">▾</span>
+          </button>
 
-# 4) Add bilingual translation keys.
-fr_nav = '"nav.home":"Accueil","nav.profile":"Profil","nav.experience":"Expérience","nav.expertise":"Expertise","nav.contact":"Contact","nav.cta":"Connect",'
-fr_nav_new = '"nav.home":"Accueil","nav.profile":"Profil","nav.experience":"Expérience","nav.expertise":"Expertise","nav.contact":"Contact","nav.download":"Télécharger","download.en":"CV anglais","download.fr":"CV français","nav.cta":"Connect",'
-html = html.replace(fr_nav, fr_nav_new, 1)
+          <div class="download-menu" role="menu" aria-label="CV downloads">
+            <a href="Korantemaa_Ofei-Agyekum_CV_EN.pdf" download role="menuitem">
+              <span data-i18n="download.en">CV anglais</span>
+            </a>
+            <a href="Korantemaa_Ofei-Agyekum_CV_FR.pdf" download role="menuitem">
+              <span data-i18n="download.fr">CV français</span>
+            </a>
+          </div>
+        </div>
+        <a class="nav-link cta" href="https://www.linkedin.com/in/korantemaa-ofei-agyekum/" target="_blank" rel="noopener" data-i18n="nav.cta">Connect</a>
+        <div class="lang-switch" aria-label="Language selector">
+          <button class="lang-btn active" type="button" data-lang="fr">FR</button>
+          <button class="lang-btn" type="button" data-lang="en">EN</button>
+        </div>
+      </nav>
+    </div>
 
-en_nav = '"nav.home":"Home","nav.profile":"Profile","nav.experience":"Experience","nav.expertise":"Expertise","nav.contact":"Contact","nav.cta":"Connect",'
-en_nav_new = '"nav.home":"Home","nav.profile":"Profile","nav.experience":"Experience","nav.expertise":"Expertise","nav.contact":"Contact","nav.download":"Download","download.en":"English CV","download.fr":"French CV","nav.cta":"Connect",'
-html = html.replace(en_nav, en_nav_new, 1)
+    <section class="page active" id="page-home">
+      <div class="hero">
+        <div class="hero-card">
+          <div class="identity-row">
+            <div class="avatar" aria-label="Korantemaa Ofei-Agyekum photo">
+              <img src='data:image/jpeg;base64,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' alt='Korantemaa Ofei-Agyekum' />
+            </div>
+            <div>
+              <div class="eyebrow" data-i18n="home.badge">Disponible pour des rôles en trésorerie & opérations de marché</div>
+              <h1><span class="grad">Korantemaa</span><br><span class="grad">Ofei-Agyekum</span></h1>
+            </div>
+          </div>
+          <div class="role" data-i18n="home.role">Trésorière / Contrôleuse des opérations de marché</div>
+          <p class="summary" data-i18n="home.summary">
+            Bilingue anglais-français, experte en trésorerie et en contrôle des opérations de marché. Rigoureuse, réactive et orientée solutions, je sécurise les flux financiers, les positions de change et les processus de règlement-livraison dans des environnements exigeants et internationaux.
+          </p>
+          <div class="cta-row">
+            <button class="btn primary" data-go="experience" data-i18n="home.cta1">Voir l’expérience</button>
+            <button class="btn secondary" data-go="contact" data-i18n="home.cta2">Coordonnées</button>
+          </div>
+          <div class="trust">
+            <div class="trust-label" data-i18n="home.trust">Domaines clés</div>
+            <div class="trust-row">
+              <span class="trust-chip" data-i18n="home.trust1">Trésorerie</span>
+              <span class="trust-chip" data-i18n="home.trust2">FX & Taux</span>
+              <span class="trust-chip" data-i18n="home.trust3">Cash Management</span>
+              <span class="trust-chip" data-i18n="home.trust4">Contrôles internes</span>
+              <span class="trust-chip" data-i18n="home.trust5">TMS / Reporting</span>
+              <span class="trust-chip" data-i18n="home.trust6">Matières premières</span>
+            </div>
+          </div>
+        </div>
 
-# 5) Add JS to make the dropdown reliable on iOS/Android and desktop.
-dropdown_js = """
+        <div class="hero-right">
+          <div class="stat">
+            <div class="stat-num">FX</div>
+            <div class="stat-label" data-i18n="stats.fxLabel">Contrôle des positions</div>
+            <div class="stat-desc" data-i18n="stats.fxDesc">Suivi des expositions de change et des opérations de marché.</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">TMS</div>
+            <div class="stat-label" data-i18n="stats.tmsLabel">Kyriba / Diapason</div>
+            <div class="stat-desc" data-i18n="stats.tmsDesc">Outils de trésorerie, rapprochements et suivi des flux.</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">IHB</div>
+            <div class="stat-label" data-i18n="stats.ihbLabel">Back-up In-House Bank</div>
+            <div class="stat-desc" data-i18n="stats.ihbDesc">Support cash pooling et Payfact.</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">EN/FR</div>
+            <div class="stat-label" data-i18n="stats.langLabel">Bilingue</div>
+            <div class="stat-desc" data-i18n="stats.langDesc">Communication professionnelle en environnement international.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-profile">
+      <div class="panel">
+        <div class="section-title">
+          <h2 data-i18n="profile.title">Profil professionnel.</h2>
+          <p data-i18n="profile.subtitle">Un positionnement finance orienté contrôle, précision opérationnelle et sécurisation des flux.</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3 data-i18n="profile.card1Title">Positionnement</h3>
+            <p data-i18n="profile.card1Text">
+              Professionnelle de la finance spécialisée en trésorerie, cash management et contrôle des opérations de marché. Forte capacité à travailler avec le Front Office, Corporate Finance, la Trésorerie Internationale et les partenaires bancaires.
+            </p>
+            <div class="tags">
+              <span class="tag" data-i18n="profile.tag1">Trésorerie</span>
+              <span class="tag" data-i18n="profile.tag2">Contrôle marché</span>
+              <span class="tag" data-i18n="profile.tag3">Reporting</span>
+              <span class="tag" data-i18n="profile.tag4">Conformité</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3 data-i18n="profile.card2Title">Valeur ajoutée</h3>
+            <ul>
+              <li data-i18n="profile.li1">Sécurisation des flux financiers et des positions de liquidité.</li>
+              <li data-i18n="profile.li2">Contrôle des opérations FX, taux, financement et matières premières.</li>
+              <li data-i18n="profile.li3">Résolution d’anomalies, confirmations et règlements-livraisons.</li>
+              <li data-i18n="profile.li4">Contribution aux contrôles internes et à l’amélioration des processus.</li>
+              <li data-i18n="profile.li5">Communication claire avec les équipes finance et les banques.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-experience">
+      <div class="panel">
+        <div class="section-title">
+          <h2 data-i18n="experience.title">Expérience professionnelle complète.</h2>
+          <p data-i18n="experience.subtitle">Toutes les expériences du CV sont intégrées et structurées avec les missions clés : Danone, EUTELSAT, EBI Groupe Ecobank et Ecobank Ghana.</p>
+        </div>
+
+        <div class="experience-grid experience-grid-fixed">
+          <article class="featured-role danone-card">
+            <div class="danone-header">
+              <div>
+                <div class="date" data-i18n="experience.danoneDate">10/2022 - Présent</div>
+                <div class="company">Danone</div>
+              </div>
+              <h3 data-i18n="experience.danoneRole">Trésorière / Contrôleuse des opérations de marché</h3>
+            </div>
+
+            <div class="danone-content">
+              <div class="danone-main">
+                <ul>
+                  <li data-i18n="experience.danoneB1">Suivi quotidien de la trésorerie : positions de liquidité, rapprochements bancaires et contrôle des expositions de change.</li>
+                  <li data-i18n="experience.danoneB2">Gestion opérationnelle des opérations de marché : FX, taux, financement, matières premières, validations, confirmations, règlements-livraisons et résolution des anomalies.</li>
+                  <li data-i18n="experience.danoneB3">Analyse et contrôle des portefeuilles d’opérations en coordination avec le Front Office : revue des transactions, limites et performances.</li>
+                  <li data-i18n="experience.danoneB4">Participation aux contrôles internes et à la revue annuelle du dispositif afin de garantir la conformité et la maîtrise des risques.</li>
+                  <li data-i18n="experience.danoneB5">Production et analyse du reporting financier sur les mandats de gestion : change et matières premières.</li>
+                  <li data-i18n="experience.danoneB6">Contribution aux opérations financières intra-groupe : prêts inter-compagnies et opérations de capital.</li>
+                  <li data-i18n="experience.danoneB7">Participation aux projets d’optimisation des processus et des systèmes.</li>
+                </ul>
+              </div>
+
+              <aside class="backup-box">
+                <div class="backup-label" data-i18n="experience.backupLabel">Back-up Role</div>
+                <h4 data-i18n="experience.backupTitle">In-House Bank Manager</h4>
+                <ul>
+                  <li data-i18n="experience.backupB1">Support opérationnel sur le cash pooling.</li>
+                  <li data-i18n="experience.backupB2">Support opérationnel sur la Payfact.</li>
+                </ul>
+              </aside>
+            </div>
+
+            <div class="tags">
+              <span class="tag" data-i18n="experience.tag1">Trésorerie</span>
+              <span class="tag" data-i18n="experience.tag2">FX & Taux</span>
+              <span class="tag" data-i18n="experience.tag3">Matières premières</span>
+              <span class="tag" data-i18n="experience.tag4">Reporting</span>
+              <span class="tag" data-i18n="experience.tag5">Contrôles internes</span>
+            </div>
+          </article>
+
+          <div class="mini-stack experience-history">
+            <article class="mini-role">
+              <div class="date" data-i18n="experience.eutelsatDate">10/2021 - 10/2022</div>
+              <h3 data-i18n="experience.eutelsatRole">Apprentie Gestion de Trésorerie Groupe</h3>
+              <div class="company">EUTELSAT SA</div>
+              <ul>
+                <li data-i18n="experience.eutelsatB1">Gestion du suivi de la liquidité du Groupe et support aux opérations de marché liées au FX et aux taux.</li>
+                <li data-i18n="experience.eutelsatB2">Préparation et suivi des flux en devises et en euros ; collecte et envoi de la documentation SSI.</li>
+                <li data-i18n="experience.eutelsatB3">Rapprochement des flux bancaires dans le système de trésorerie Kyriba.</li>
+                <li data-i18n="experience.eutelsatB4">Support aux contrôles de conformité des flux par la collecte d’informations demandées par les banques et régulateurs financiers.</li>
+                <li data-i18n="experience.eutelsatB5">Gestion des procédures KYC : collecte documentaire, ouvertures de comptes bancaires et mises à jour des pouvoirs bancaires.</li>
+              </ul>
+            </article>
+
+            <article class="mini-role">
+              <div class="date" data-i18n="experience.ebiFxDate">12/2019 - 05/2020</div>
+              <h3 data-i18n="experience.ebiFxRole">Back Office Officer — Contrôle des règlements Forex / Investigations</h3>
+              <div class="company">EBI SA Groupe Ecobank</div>
+              <ul>
+                <li data-i18n="experience.ebiFxB1">Contrôle de la bonne exécution des règlements FX depuis la saisie de l’opération jusqu’à la confirmation du crédit.</li>
+                <li data-i18n="experience.ebiFxB2">Investigation des suspens de trésorerie via email, Swift et comptes Nostri.</li>
+                <li data-i18n="experience.ebiFxB3">Suivi et documentation des transactions non rapprochées.</li>
+                <li data-i18n="experience.ebiFxB4">Support aux contrôles comptables et opérationnels.</li>
+              </ul>
+            </article>
+
+            <article class="mini-role">
+              <div class="date" data-i18n="experience.ebiNostriDate">06/2019 - 11/2019</div>
+              <h3 data-i18n="experience.ebiNostriRole">Back Office Officer — Rapprochement Nostri</h3>
+              <div class="company">EBI SA Groupe Ecobank</div>
+              <ul>
+                <li data-i18n="experience.ebiNostriB1">Suivi de la comptabilisation des transactions saisies par les départements Back Office.</li>
+                <li data-i18n="experience.ebiNostriB2">Rapprochement de 89 comptes bancaires Nostri par jour.</li>
+                <li data-i18n="experience.ebiNostriB3">Suivi et documentation des transactions non rapprochées.</li>
+                <li data-i18n="experience.ebiNostriB4">Support aux contrôles opérationnels bancaires.</li>
+              </ul>
+            </article>
+
+            <article class="mini-role">
+              <div class="date" data-i18n="experience.ecobankDate">05/2018 - 08/2018</div>
+              <h3 data-i18n="experience.ecobankRole">Conseillère clientèle bancaire</h3>
+              <div class="company">Ecobank Ghana Limited</div>
+              <ul>
+                <li data-i18n="experience.ecobankB1">Échange avec les clients et analyse de leurs besoins en produits bancaires et services financiers.</li>
+                <li data-i18n="experience.ecobankB2">Traitement des questions, problèmes et réclamations clients.</li>
+                <li data-i18n="experience.ecobankB3">Promotion des canaux bancaires alternatifs : Ecobank Mobile, banque en ligne et services associés.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="page" id="page-expertise">
+      <div class="panel">
+        <div class="section-title">
+          <h2 data-i18n="expertise.title">Expertise & outils.</h2>
+          <p data-i18n="expertise.subtitle">Compétences organisées pour une lecture claire par les recruteurs finance, trésorerie et opérations de marché.</p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <h3 data-i18n="expertise.card1Title">Trésorerie & cash management</h3>
+            <p data-i18n="expertise.card1Text">Suivi quotidien de trésorerie, liquidité, cash pooling, rapprochements bancaires, flux financiers et prêts inter-compagnies.</p>
+          </div>
+          <div class="card">
+            <h3 data-i18n="expertise.card2Title">Opérations de marché</h3>
+            <p data-i18n="expertise.card2Text">FX, taux, financement, matières premières, confirmations, règlements-livraisons, contrôles et résolution d’anomalies.</p>
+          </div>
+          <div class="card">
+            <h3 data-i18n="expertise.card3Title">Contrôles & reporting</h3>
+            <p data-i18n="expertise.card3Text">Analyse de portefeuilles, reporting financier, revue annuelle, contrôles internes, conformité et gestion des risques opérationnels.</p>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3 data-i18n="expertise.toolsTitle">Outils techniques</h3>
+          <div class="tags">
+            <span class="tag">Pack Office</span>
+            <span class="tag">Swift</span>
+            <span class="tag">ISO 20022</span>
+            <span class="tag">Kyriba (TMS)</span>
+            <span class="tag">Calypso</span>
+            <span class="tag">Flexcube</span>
+            <span class="tag">Finastra</span>
+            <span class="tag">Bankcomm</span>
+            <span class="tag">Diapason (TMS)</span>
+            <span class="tag">SAP Movin On</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-contact">
+      <div class="panel">
+        <div class="section-title">
+          <h2 data-i18n="contact.title">Contact.</h2>
+          <p data-i18n="contact.subtitle">Informations directes pour les recruteurs, managers finance et équipes RH.</p>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-item">
+            <div class="contact-label" data-i18n="contact.tel">Téléphone</div>
+            <div class="contact-value">+33 7 66 30 13 73</div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-label">Email</div>
+            <div class="contact-value"><a href="mailto:kofei-agyekum@outlook.fr">kofei-agyekum@outlook.fr</a></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-label">LinkedIn</div>
+            <div class="contact-value">Korantemaa Ofei-Agyekum</div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-label" data-i18n="contact.location">Localisation</div>
+            <div class="contact-value">Val-d’Oise (95), Île-de-France</div>
+          </div>
+        </div>
+      
+        <div class="linkedin-action">
+          <a class="linkedin-button" href="https://www.linkedin.com/in/korantemaa-ofei-agyekum/" target="_blank" rel="noopener" data-i18n="contact.linkedinButton">Connect on LinkedIn ↗</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const translations = {
+      fr: {
+        "experience.title":"Expérience professionnelle complète.",
+        "experience.subtitle":"Toutes les expériences du CV sont intégrées et structurées avec les missions clés : Danone, EUTELSAT, EBI Groupe Ecobank et Ecobank Ghana.",
+        "experience.danoneDate":"10/2022 - Présent",
+        "experience.danoneRole":"Trésorière / Contrôleuse des opérations de marché",
+        "experience.danoneB1":"Suivi quotidien de la trésorerie : positions de liquidité, rapprochements bancaires et contrôle des expositions de change.",
+        "experience.danoneB2":"Gestion opérationnelle des opérations de marché : FX, taux, financement, matières premières, validations, confirmations, règlements-livraisons et résolution des anomalies.",
+        "experience.danoneB3":"Analyse et contrôle des portefeuilles d’opérations en coordination avec le Front Office : revue des transactions, limites et performances.",
+        "experience.danoneB4":"Participation aux contrôles internes et à la revue annuelle du dispositif afin de garantir la conformité et la maîtrise des risques.",
+        "experience.danoneB5":"Production et analyse du reporting financier sur les mandats de gestion : change et matières premières.",
+        "experience.danoneB6":"Contribution aux opérations financières intra-groupe : prêts inter-compagnies et opérations de capital.",
+        "experience.danoneB7":"Participation aux projets d’optimisation des processus et des systèmes.",
+        "experience.backupLabel":"Back-up Role",
+        "experience.backupTitle":"In-House Bank Manager",
+        "experience.backupB1":"Support opérationnel sur le cash pooling.",
+        "experience.backupB2":"Support opérationnel sur la Payfact.",
+        "experience.tag1":"Trésorerie",
+        "experience.tag2":"FX & Taux",
+        "experience.tag3":"Matières premières",
+        "experience.tag4":"Reporting",
+        "experience.tag5":"Contrôles internes",
+        "experience.eutelsatDate":"10/2021 - 10/2022",
+        "experience.eutelsatRole":"Apprentie Gestion de Trésorerie Groupe",
+        "experience.eutelsatB1":"Gestion du suivi de la liquidité du Groupe et support aux opérations de marché liées au FX et aux taux.",
+        "experience.eutelsatB2":"Préparation et suivi des flux en devises et en euros ; collecte et envoi de la documentation SSI.",
+        "experience.eutelsatB3":"Rapprochement des flux bancaires dans le système de trésorerie Kyriba.",
+        "experience.eutelsatB4":"Support aux contrôles de conformité des flux par la collecte d’informations demandées par les banques et régulateurs financiers.",
+        "experience.eutelsatB5":"Gestion des procédures KYC : collecte documentaire, ouvertures de comptes bancaires et mises à jour des pouvoirs bancaires.",
+        "experience.ebiFxDate":"12/2019 - 05/2020",
+        "experience.ebiFxRole":"Back Office Officer — Contrôle des règlements Forex / Investigations",
+        "experience.ebiFxB1":"Contrôle de la bonne exécution des règlements FX depuis la saisie de l’opération jusqu’à la confirmation du crédit.",
+        "experience.ebiFxB2":"Investigation des suspens de trésorerie via email, Swift et comptes Nostri.",
+        "experience.ebiFxB3":"Suivi et documentation des transactions non rapprochées.",
+        "experience.ebiFxB4":"Support aux contrôles comptables et opérationnels.",
+        "experience.ebiNostriDate":"06/2019 - 11/2019",
+        "experience.ebiNostriRole":"Back Office Officer — Rapprochement Nostri",
+        "experience.ebiNostriB1":"Suivi de la comptabilisation des transactions saisies par les départements Back Office.",
+        "experience.ebiNostriB2":"Rapprochement de 89 comptes bancaires Nostri par jour.",
+        "experience.ebiNostriB3":"Suivi et documentation des transactions non rapprochées.",
+        "experience.ebiNostriB4":"Support aux contrôles opérationnels bancaires.",
+        "experience.ecobankDate":"05/2018 - 08/2018",
+        "experience.ecobankRole":"Conseillère clientèle bancaire",
+        "experience.ecobankB1":"Échange avec les clients et analyse de leurs besoins en produits bancaires et services financiers.",
+        "experience.ecobankB2":"Traitement des questions, problèmes et réclamations clients.",
+        "experience.ecobankB3":"Promotion des canaux bancaires alternatifs : Ecobank Mobile, banque en ligne et services associés.",
+        "nav.home":"Accueil","nav.profile":"Profil","nav.experience":"Expérience","nav.expertise":"Expertise","nav.contact":"Contact","nav.download":"Télécharger","download.en":"CV anglais","download.fr":"CV français","nav.cta":"Connect",
+        "home.badge":"Disponible pour des rôles en trésorerie & opérations de marché",
+        "home.role":"Trésorière / Contrôleuse des opérations de marché",
+        "home.summary":"Bilingue anglais-français, experte en trésorerie et en contrôle des opérations de marché. Rigoureuse, réactive et orientée solutions, je sécurise les flux financiers, les positions de change et les processus de règlement-livraison dans des environnements exigeants et internationaux.",
+        "home.cta1":"Voir l’expérience","home.cta2":"Coordonnées","home.trust":"Domaines clés","home.trust1":"Trésorerie","home.trust2":"FX & Taux","home.trust3":"Cash Management","home.trust4":"Contrôles internes","home.trust5":"TMS / Reporting","home.trust6":"Matières premières",
+        "stats.fxLabel":"Contrôle des positions","stats.fxDesc":"Suivi des expositions de change et des opérations de marché.","stats.tmsLabel":"Kyriba / Diapason","stats.tmsDesc":"Outils de trésorerie, rapprochements et suivi des flux.","stats.ihbLabel":"Back-up In-House Bank","stats.ihbDesc":"Support cash pooling et Payfact.","stats.langLabel":"Bilingue","stats.langDesc":"Communication professionnelle en environnement international.",
+        "profile.title":"Profil professionnel.","profile.subtitle":"Un positionnement finance orienté contrôle, précision opérationnelle et sécurisation des flux.","profile.card1Title":"Positionnement","profile.card1Text":"Professionnelle de la finance spécialisée en trésorerie, cash management et contrôle des opérations de marché. Forte capacité à travailler avec le Front Office, Corporate Finance, la Trésorerie Internationale et les partenaires bancaires.","profile.tag1":"Trésorerie","profile.tag2":"Contrôle marché","profile.tag3":"Reporting","profile.tag4":"Conformité","profile.card2Title":"Valeur ajoutée","profile.li1":"Sécurisation des flux financiers et des positions de liquidité.","profile.li2":"Contrôle des opérations FX, taux, financement et matières premières.","profile.li3":"Résolution d’anomalies, confirmations et règlements-livraisons.","profile.li4":"Contribution aux contrôles internes et à l’amélioration des processus.","profile.li5":"Communication claire avec les équipes finance et les banques.",
+        "expertise.title":"Expertise & outils.","expertise.subtitle":"Compétences organisées pour une lecture claire par les recruteurs finance, trésorerie et opérations de marché.","expertise.card1Title":"Trésorerie & cash management","expertise.card1Text":"Suivi quotidien de trésorerie, liquidité, cash pooling, rapprochements bancaires, flux financiers et prêts inter-compagnies.","expertise.card2Title":"Opérations de marché","expertise.card2Text":"FX, taux, financement, matières premières, confirmations, règlements-livraisons, contrôles et résolution d’anomalies.","expertise.card3Title":"Contrôles & reporting","expertise.card3Text":"Analyse de portefeuilles, reporting financier, revue annuelle, contrôles internes, conformité et gestion des risques opérationnels.","expertise.toolsTitle":"Outils techniques",
+        "contact.title":"Contact.","contact.subtitle":"Informations directes pour les recruteurs, managers finance et équipes RH.","contact.tel":"Téléphone","contact.location":"Localisation","contact.linkedinButton":"Se connecter sur LinkedIn ↗"
+      },
+      en: {
+        "experience.title":"Complete professional experience.",
+        "experience.subtitle":"All CV experience is integrated and structured around the key roles: Danone, EUTELSAT, EBI Groupe Ecobank and Ecobank Ghana.",
+        "experience.danoneDate":"10/2022 - Present",
+        "experience.danoneRole":"Treasurer / Market Operations Controller",
+        "experience.danoneB1":"Daily treasury monitoring: liquidity positions, bank reconciliations and control of foreign exchange exposures.",
+        "experience.danoneB2":"Operational management of market operations: FX, rates, financing, commodities, validations, confirmations, settlement-delivery and anomaly resolution.",
+        "experience.danoneB3":"Portfolio analysis and control in coordination with Front Office: transaction review, limits and performance monitoring.",
+        "experience.danoneB4":"Participation in internal controls and annual review processes to ensure compliance and risk control.",
+        "experience.danoneB5":"Production and analysis of financial reporting for management mandates: foreign exchange and commodities.",
+        "experience.danoneB6":"Contribution to intragroup financial operations: intercompany loans and capital operations.",
+        "experience.danoneB7":"Participation in process and system optimization projects.",
+        "experience.backupLabel":"Back-up Role",
+        "experience.backupTitle":"In-House Bank Manager",
+        "experience.backupB1":"Operational support for cash pooling.",
+        "experience.backupB2":"Operational support for Payfact.",
+        "experience.tag1":"Treasury",
+        "experience.tag2":"FX & Rates",
+        "experience.tag3":"Commodities",
+        "experience.tag4":"Reporting",
+        "experience.tag5":"Internal controls",
+        "experience.eutelsatDate":"10/2021 - 10/2022",
+        "experience.eutelsatRole":"Group Treasury Management Apprentice",
+        "experience.eutelsatB1":"Managed Group liquidity monitoring and supported market operations related to FX and rates.",
+        "experience.eutelsatB2":"Prepared and monitored flows in foreign currencies and euros; collected and sent SSI documentation.",
+        "experience.eutelsatB3":"Performed bank flow reconciliations in the Kyriba treasury management system.",
+        "experience.eutelsatB4":"Supported flow compliance controls by collecting information required by banks and financial regulators.",
+        "experience.eutelsatB5":"Handled KYC procedures: document collection, bank account openings and updates to banking authorities.",
+        "experience.ebiFxDate":"12/2019 - 05/2020",
+        "experience.ebiFxRole":"Back Office Officer — Forex Settlement Control / Investigations",
+        "experience.ebiFxB1":"Ensured proper execution of FX settlements from deal booking through credit confirmation.",
+        "experience.ebiFxB2":"Investigated treasury suspenses using email, Swift and Nostri accounts.",
+        "experience.ebiFxB3":"Monitored and documented unreconciled transactions.",
+        "experience.ebiFxB4":"Supported accounting and operational controls.",
+        "experience.ebiNostriDate":"06/2019 - 11/2019",
+        "experience.ebiNostriRole":"Back Office Officer — Nostri Reconciliation",
+        "experience.ebiNostriB1":"Monitored the accounting completion of transactions entered by Back Office departments.",
+        "experience.ebiNostriB2":"Reconciled 89 Nostri bank accounts per day.",
+        "experience.ebiNostriB3":"Tracked and documented unreconciled transactions.",
+        "experience.ebiNostriB4":"Supported operational banking controls.",
+        "experience.ecobankDate":"05/2018 - 08/2018",
+        "experience.ecobankRole":"Banking Customer Advisor",
+        "experience.ecobankB1":"Discussed with clients and analyzed their needs for banking products and financial services.",
+        "experience.ecobankB2":"Handled customer questions, issues and complaints.",
+        "experience.ecobankB3":"Promoted alternative banking channels: Ecobank Mobile, online banking and related services.",
+        "nav.home":"Home","nav.profile":"Profile","nav.experience":"Experience","nav.expertise":"Expertise","nav.contact":"Contact","nav.download":"Download","download.en":"English CV","download.fr":"French CV","nav.cta":"Connect",
+        "home.badge":"Available for treasury & market operations roles",
+        "home.role":"Treasurer / Market Operations Controller",
+        "home.summary":"Bilingual English-French finance professional specialized in treasury and market operations control. Rigorous, responsive and solution-oriented, I secure financial flows, FX positions and settlement-delivery processes in demanding international environments.",
+        "home.cta1":"View experience","home.cta2":"Contact details","home.trust":"Core areas","home.trust1":"Treasury","home.trust2":"FX & Rates","home.trust3":"Cash Management","home.trust4":"Internal Controls","home.trust5":"TMS / Reporting","home.trust6":"Commodities",
+        "stats.fxLabel":"Position control","stats.fxDesc":"Monitoring FX exposures and market operations.","stats.tmsLabel":"Kyriba / Diapason","stats.tmsDesc":"Treasury tools, reconciliations and flow monitoring.","stats.ihbLabel":"In-House Bank back-up","stats.ihbDesc":"Cash pooling and Payfact operational support.","stats.langLabel":"Bilingual","stats.langDesc":"Professional communication in international environments.",
+        "profile.title":"Professional profile.","profile.subtitle":"A finance profile focused on control, operational accuracy and secure financial flows.","profile.card1Title":"Positioning","profile.card1Text":"Finance professional specialized in treasury, cash management and market operations control. Strong ability to work with Front Office, Corporate Finance, International Treasury and banking partners.","profile.tag1":"Treasury","profile.tag2":"Market control","profile.tag3":"Reporting","profile.tag4":"Compliance","profile.card2Title":"Value proposition","profile.li1":"Securing financial flows and liquidity positions.","profile.li2":"Controlling FX, rates, financing and commodities operations.","profile.li3":"Resolving anomalies, confirmations and settlement-delivery issues.","profile.li4":"Contributing to internal controls and process improvement.","profile.li5":"Clear communication with finance teams and banking partners.",
+        "expertise.title":"Expertise & tools.","expertise.subtitle":"Skills organized for clear reading by finance, treasury and market operations recruiters.","expertise.card1Title":"Treasury & cash management","expertise.card1Text":"Daily treasury monitoring, liquidity, cash pooling, bank reconciliations, financial flows and intercompany loans.","expertise.card2Title":"Market operations","expertise.card2Text":"FX, rates, financing, commodities, confirmations, settlement-delivery, controls and anomaly resolution.","expertise.card3Title":"Controls & reporting","expertise.card3Text":"Portfolio analysis, financial reporting, annual review, internal controls, compliance and operational risk management.","expertise.toolsTitle":"Technical tools",
+        "contact.title":"Contact.","contact.subtitle":"Direct information for recruiters, finance managers and HR teams.","contact.tel":"Phone","contact.location":"Location","contact.linkedinButton":"Connect on LinkedIn ↗"
+      }
+    };
+
+    const navButtons = document.querySelectorAll(".nav-btn[data-page]");
+    const pages = document.querySelectorAll(".page");
+    const goButtons = document.querySelectorAll("[data-go]");
+    const langButtons = document.querySelectorAll(".lang-btn");
+
+    function showPage(name) {
+      const target = document.getElementById("page-" + name);
+      if (!target) return;
+
+      pages.forEach(page => page.classList.remove("active"));
+      target.classList.add("active");
+
+      navButtons.forEach(button => {
+        const isCurrent = button.dataset.page === name;
+        button.classList.toggle("active", isCurrent);
+        button.setAttribute("aria-current", isCurrent ? "page" : "false");
+      });
+
+      history.replaceState(null, "", "#" + name);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function setLanguage(lang) {
+      const dict = translations[lang] || translations.fr;
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+
+      langButtons.forEach(button => {
+        const isCurrent = button.dataset.lang === lang;
+        button.classList.toggle("active", isCurrent);
+        button.setAttribute("aria-pressed", isCurrent ? "true" : "false");
+      });
+
+      localStorage.setItem("korantemaaPortfolioLang", lang);
+    }
+
+    navButtons.forEach(button => {
+      button.addEventListener("click", event => {
+        event.preventDefault();
+        showPage(button.dataset.page);
+      });
+    });
+
+    goButtons.forEach(button => {
+      button.addEventListener("click", event => {
+        event.preventDefault();
+        showPage(button.dataset.go);
+      });
+    });
+
+    langButtons.forEach(button => {
+      button.addEventListener("click", event => {
+        event.preventDefault();
+        setLanguage(button.dataset.lang);
+      });
+    });
+
+
     const downloadDropdown = document.querySelector(".download-dropdown");
     const downloadToggle = document.querySelector(".download-toggle");
 
@@ -165,15 +2311,9 @@ dropdown_js = """
       });
     }
 
-"""
-
-if "const downloadDropdown = document.querySelector" not in html:
-    marker = '    const initialPage = (location.hash || "#home").replace("#", "");'
-    html = html.replace(marker, dropdown_js + marker, 1)
-
-# Save final full HTML.
-out = Path("/mnt/data/Korantemaa_portfolio_with_CV_download_dropdown.html")
-out.write_text(html, encoding="utf-8")
-
-print(out.as_posix())
-print(f"Size: {out.stat().st_size:,} bytes")
+    const initialPage = (location.hash || "#home").replace("#", "");
+    setLanguage(localStorage.getItem("korantemaaPortfolioLang") || "fr");
+    showPage(document.getElementById("page-" + initialPage) ? initialPage : "home");
+  </script>
+</body>
+</html>
