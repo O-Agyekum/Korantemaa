@@ -2240,7 +2240,8 @@ img {
         button.setAttribute("aria-current", isCurrent ? "page" : "false");
       });
 
-      history.replaceState(null, "", "#" + name);
+      // Keep the URL clean: no #home, #profile, #experience, etc.
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -2310,9 +2311,8 @@ img {
       });
     }
 
-    const initialPage = (location.hash || "#home").replace("#", "");
     setLanguage(localStorage.getItem("korantemaaPortfolioLang") || "fr");
-    showPage(document.getElementById("page-" + initialPage) ? initialPage : "home");
+    showPage("home");
   </script>
 </body>
 </html>
