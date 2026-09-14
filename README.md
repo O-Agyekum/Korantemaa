@@ -1,4 +1,4 @@
-# Korantemaa Agyekum — Portfolio
+# Korantemaa Ofei-Agyekum — Portfolio
 
 Multi-page bilingual portfolio (EN source, FR toggle), same design system as Roland Dzoagbe's site.
 Pages: index, about, experience, impact, expertise, leadership, contact, 404.
@@ -8,16 +8,10 @@ Pages: index, about, experience, impact, expertise, leadership, contact, 404.
 2. Settings → Pages → Source: "Deploy from a branch", branch `main`, folder `/ (root)`.
 3. The site is served at https://o-agyekum.github.io/Korantemaa/
 
-## Before publishing: replace every [bracketed] placeholder
-Search all files for `[` to find them. They are:
-- **Full name**: currently "Korantemaa Agyekum" (brand, titles, footer, favicon initials "KA"). If the surname is different, search-and-replace it in every .html file and in app.js.
-- **Contact**: `[email@example.com]`, `[+33 6 …]`, `[linkedin.com/in/…]` in index.html, contact.html and the footer of every page.
-- **Experience dates and titles** (experience.html + French copies in app.js): Danone start year, Eutelsat end year and job title, the bank's name and city (2013–2018).
-- **Education and certifications** (experience.html): two education lines, certification line, other treasury systems.
-- **Tools** (expertise.html): `[TMS / ERP]`, `[Banking platforms]`.
-- **Recommendations** (leadership.html): paste LinkedIn recommendations or delete the two placeholder cards.
+## Remaining items to confirm
+Contact details, dates, titles, education and tools were filled from the two CV PDFs in the repository.
 - **Photo**: add `profile.jpg` (square, at least 600×600). Without it the site shows the initials.
-- **CVs**: add `Korantemaa_Agyekum_CV_EN.pdf` and `Korantemaa_Agyekum_CV_FR.pdf` at the root, or remove the CV links (footer + contact page).
+- **Story vs CV**: the original narrative mentioned five years in banking (2013–2018) and Eutelsat from 2018; the site follows the CV (Ecobank 2018–2020, Eutelsat 2021–2022, Danone since 2022). Adjust if the CV is incomplete.
 
 ## How translations work
 English text lives in the HTML. French lives in `app.js` under `T.fr`, keyed by `data-i18n`. When you change an English sentence in the HTML, update the matching French value in app.js.
