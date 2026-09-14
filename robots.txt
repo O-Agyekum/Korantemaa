@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://o-agyekum.github.io/Korantemaa/sitemap.xml
